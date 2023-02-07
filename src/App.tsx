@@ -1,26 +1,45 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import "./App.scss";
+import { fetchMovies } from "./store/fetchMovies";
+import { AppDispatch, RootState } from "./store/store";
+import { Routes, Route } from "react-router-dom";
+import { MainPage } from "./pages/MainPage";
+import { FavouritePage } from "./pages/FavouritePage";
+import { Header } from "./components/Header/Header";
+import { getMoviesFromLocalstorage } from "./store/localstorageReducer";
+import { IMovie } from "./types/types";
 
-function App() {
+const App = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(fetchMovies());
+  }, [dispatch]);
+
+  const movies = useSelector((state: RootState) => state);
+  useEffect(() => {
+    const savedMovies: IMovie[] = JSON.parse(
+      localStorage.getItem("favourites") || "[]"
+    );
+    dispatch(getMoviesFromLocalstorage(savedMovies));
+  }, [dispatch]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Header />
+      <Routes>
+        <Route path="/" element={<MainPage cards={movies.movies.movies} />} />
+        <Route
+          path="/favorites"
+          element={
+            <FavouritePage cards={movies.favouriteMovies.favouriteMovies} />
+          }
+        />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;
+
+// проверять в юзэфф локал сторадж есть или нет
