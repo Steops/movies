@@ -3,8 +3,5 @@ export interface IMovie {
   name: string;
   description: string;
   src: string;
-}
-
-export interface IPage {
-  cards: IMovie[];
+  rank?: number;
 }

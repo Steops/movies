@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import "./App.scss";
 import { fetchMovies } from "./store/fetchMovies";
-import { AppDispatch, RootState } from "./store/store";
+import { AppDispatch } from "./store/store";
 import { Routes, Route } from "react-router-dom";
 import { MainPage } from "./pages/MainPage";
 import { FavouritePage } from "./pages/FavouritePage";
@@ -12,11 +12,11 @@ import { IMovie } from "./types/types";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
+
   useEffect(() => {
     dispatch(fetchMovies());
   }, [dispatch]);
 
-  const movies = useSelector((state: RootState) => state);
   useEffect(() => {
     const savedMovies: IMovie[] = JSON.parse(
       localStorage.getItem("favourites") || "[]"
@@ -28,13 +28,8 @@ const App = () => {
     <div className="app">
       <Header />
       <Routes>
-        <Route path="/" element={<MainPage cards={movies.movies.movies} />} />
-        <Route
-          path="/favorites"
-          element={
-            <FavouritePage cards={movies.favouriteMovies.favouriteMovies} />
-          }
-        />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/favorites" element={<FavouritePage />} />
       </Routes>
     </div>
   );

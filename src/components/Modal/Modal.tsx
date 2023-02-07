@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setRateMovies } from "../../store/rateMoviesReducer";
 import { RootState } from "../../store/store";
@@ -9,10 +10,28 @@ interface IModal {
   rates: number;
   setRates: any;
 }
-const Modal = ({ chooseMovie, isModal, rates, setRates }: IModal) => {
+const Modal = ({ chooseMovie, isModal }: IModal) => {
   const dispatch = useDispatch();
 
+  const ratedMovies = useSelector(
+    (state: RootState) => state.rateMoviesReducer.ratedMovies
+  );
+  const [currentRate, setCurrentRate] = useState(0);
+
+  useEffect(() => {
+    setCurrentRate(0);
+  }, [chooseMovie]);
+
+  useEffect(() => {
+    const ratedMovie = ratedMovies.find((movie) => movie.id === chooseMovie.id);
+    if (ratedMovie) {
+      setCurrentRate(ratedMovie.rate);
+    }
+  }, [chooseMovie?.id, ratedMovies]);
+
   const rateData = [5, 4, 3, 2, 1];
+
+  //TODO: Add overlay
   return !isModal ? null : (
     <div className="modal">
       <span className="modal__title">
@@ -24,7 +43,6 @@ const Modal = ({ chooseMovie, isModal, rates, setRates }: IModal) => {
           <div
             className="star"
             onClick={() => {
-              setRates(rate);
               dispatch(setRateMovies({ ...chooseMovie, rate }));
             }}
             key={index}
@@ -33,7 +51,7 @@ const Modal = ({ chooseMovie, isModal, rates, setRates }: IModal) => {
           </div>
         ))}
       </div>
-      <span className="modal__title">Ваша оценка: {rates}</span>
+      <span className="modal__title">Ваша оценка: {currentRate}</span>
     </div>
   );
 };

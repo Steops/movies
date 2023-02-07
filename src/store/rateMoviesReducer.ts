@@ -17,13 +17,29 @@ const defaultState: IRatedMovies = {
   ratedMovies: [],
 };
 
+//TODO: Add localstorage
+
 export const rateMoviesReducer = (
   state = defaultState,
   action: PayloadAction<IRatedMovie>
 ) => {
   switch (action.type) {
     case RATE_MOVIES_REDUCER:
-      console.log(action.payload);
+      const movieIndex = state.ratedMovies.findIndex(
+        (item) => action.payload.id === item.id
+      );
+      if (movieIndex >= 0) {
+        const newRatedMovie = {
+          ...state.ratedMovies[movieIndex],
+          rate: action.payload.rate,
+        };
+        const copiedMovies = [...state.ratedMovies];
+        copiedMovies.splice(movieIndex, 1, newRatedMovie);
+
+        return {
+          ratedMovies: [...copiedMovies],
+        };
+      }
       return {
         ratedMovies: [...state.ratedMovies, action.payload],
       };

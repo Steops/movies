@@ -10,32 +10,19 @@ import { IMovie } from "../../types/types";
 interface MovieItemProps {
   item: IMovie;
   setModal: any;
+  withoutRating?: boolean;
   setChooseMovie: any;
-  setRates: any;
-  chooseMovie: IMovie;
 }
 export const MovieItem = ({
   item,
   setModal,
+  withoutRating,
   setChooseMovie,
-  setRates,
-  chooseMovie,
 }: MovieItemProps) => {
   const dispatch = useDispatch();
   const favMovies = useSelector(
-    (state: RootState) => state.favouriteMovies.favouriteMovies
+    (state: RootState) => state.favouriteMoviesReducer.favouriteMovies
   );
-  const ratedMovies = useSelector(
-    (state: RootState) => state.ratedMovies.ratedMovies
-  );
-
-  const rateMovie = ratedMovies.find((item) => {
-    if (item.id === chooseMovie.id) {
-      return item;
-    } else {
-      return 0;
-    }
-  });
 
   return (
     <div className="movie-item">
@@ -43,16 +30,17 @@ export const MovieItem = ({
       <h1 className="movie-item__name">{item.name}</h1>
       <span className="movie-item__description">{item.description}</span>
       <div className="movie-item__buttons">
-        <button
-          className="movie-item__btn"
-          onClick={() => {
-            setModal(true);
-            setChooseMovie(item);
-            setRates(rateMovie?.id);
-          }}
-        >
-          Изменить оценку
-        </button>
+        {!withoutRating && (
+          <button
+            className="movie-item__btn"
+            onClick={() => {
+              setChooseMovie(item);
+              setModal(true);
+            }}
+          >
+            Изменить оценку
+          </button>
+        )}
         {!favMovies.some((movies) => movies.id === item.id) ? (
           <button
             className="movie-item__btn"
@@ -75,12 +63,14 @@ export const MovieItem = ({
 
 interface IMoviesCards {
   cards: IMovie[];
-  setModal: any;
-  setChooseMovie: any;
-  setRates: any;
-  chooseMovie: IMovie;
+  setModal?: any;
+  setChooseMovie?: any;
+  setRates?: any;
+  chooseMovie?: IMovie;
+  withoutRating?: boolean;
 }
 const MoviesCards = ({
+  withoutRating,
   cards,
   setModal,
   setChooseMovie,
@@ -98,6 +88,7 @@ const MoviesCards = ({
             setChooseMovie={setChooseMovie}
             setRates={setRates}
             chooseMovie={chooseMovie}
+            withoutRating={withoutRating}
           />
         ))}
     </div>

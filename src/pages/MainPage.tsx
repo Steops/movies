@@ -1,28 +1,25 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { Modal } from "../components/Modal/Modal";
 import MoviesCards from "../components/MoviesCard/MoviesCards";
-import { IMovie, IPage } from "../types/types";
+import { RootState } from "../store/store";
+import { IMovie } from "../types/types";
 
-const MainPage = ({ cards }: IPage) => {
-  const [chooseMovie, setChooseMovie] = useState<IMovie>(cards[4]);
+const MainPage = () => {
+  const movies = useSelector((state: RootState) => state.moviesReducer.movies);
+
+  const [chooseMovie, setChooseMovie] = useState<IMovie | null>(null);
+  //TODO isModalOpen, setIsModalOpen
   const [isModal, setModal] = useState<boolean>(false);
-  const [rates, setRates] = useState<number>(0);
 
   return (
     <div className="main-page">
       <button onClick={() => setModal(false)}>fuckoff</button>
-      <Modal
-        isModal={isModal}
-        chooseMovie={chooseMovie}
-        setRates={setRates}
-        rates={rates}
-      />
+      <Modal isModal={isModal} chooseMovie={chooseMovie} />
       <MoviesCards
-        cards={cards}
+        cards={movies}
         setModal={setModal}
         setChooseMovie={setChooseMovie}
-        setRates={setRates}
-        chooseMovie={chooseMovie}
       />
     </div>
   );

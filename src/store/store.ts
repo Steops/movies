@@ -6,9 +6,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import { localstorageReducer } from "./localstorageReducer";
 
 const rootReducer = combineReducers({
-  movies: moviesReducer,
-  favouriteMovies: favouriteMoviesReducer,
-  ratedMovies: rateMoviesReducer,
+  moviesReducer,
+  favouriteMoviesReducer,
+  rateMoviesReducer,
   localstorageReducer,
 });
 
