@@ -3,5 +3,5 @@ export interface IMovie {
   name: string;
   description: string;
   src: string;
-  rank?: number;
+  rate: { scenario?: number; operator?: number; artist?: number };
 }

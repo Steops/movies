@@ -5,9 +5,10 @@ import MoviesCards from "../components/MoviesCard/MoviesCards";
 import { RootState } from "../store/store";
 import { IMovie } from "../types/types";
 
-const MainPage = () => {
-  const movies = useSelector((state: RootState) => state.moviesReducer.movies);
-
+const RatedPage = () => {
+  const movies = useSelector(
+    (state: RootState) => state.rateMoviesReducer.ratedMovies
+  );
   const [chooseMovie, setChooseMovie] = useState<IMovie>({
     id: 0,
     name: "",
@@ -16,7 +17,6 @@ const MainPage = () => {
     rate: {},
   });
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-
   return (
     <div className="page">
       <Modal
@@ -29,8 +29,13 @@ const MainPage = () => {
         setModalOpen={setModalOpen}
         setChooseMovie={setChooseMovie}
       />
+      <span
+        className={movies.length === 0 ? "page__alert-on" : "page__alert-off"}
+      >
+        Оценённых фильмов пока нет!
+      </span>
     </div>
   );
 };
 
-export { MainPage };
+export { RatedPage };

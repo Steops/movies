@@ -1,15 +1,40 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Modal } from "../components/Modal/Modal";
 import MoviesCards from "../components/MoviesCard/MoviesCards";
 import { RootState } from "../store/store";
+import { IMovie } from "../types/types";
 
 const FavouritePage = () => {
   const movies = useSelector(
     (state: RootState) => state.favouriteMoviesReducer.favouriteMovies
   );
+  const [chooseMovie, setChooseMovie] = useState<IMovie>({
+    id: 0,
+    name: "",
+    description: "",
+    src: "",
+    rate: {},
+  });
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   return (
-    <div className="favourite-page">
-      <MoviesCards withoutRating cards={movies} />
+    <div className="page">
+      <Modal
+        isModalOpen={isModalOpen}
+        chooseMovie={chooseMovie}
+        setModalOpen={setModalOpen}
+      />
+      <MoviesCards
+        cards={movies}
+        setModalOpen={setModalOpen}
+        setChooseMovie={setChooseMovie}
+      />
+      <span
+        className={movies.length === 0 ? "page__alert-on" : "page__alert-off"}
+      >
+        Фильмов в избранном пока нет!
+      </span>
     </div>
   );
 };

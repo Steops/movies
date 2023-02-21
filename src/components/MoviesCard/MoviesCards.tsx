@@ -1,3 +1,10 @@
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../../App.scss";
 import {
@@ -9,21 +16,36 @@ import { IMovie } from "../../types/types";
 
 interface MovieItemProps {
   item: IMovie;
-  setModal: any;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
   withoutRating?: boolean;
-  setChooseMovie: any;
+  setChooseMovie: Dispatch<SetStateAction<IMovie>>;
 }
 export const MovieItem = ({
   item,
-  setModal,
+  setModalOpen,
   withoutRating,
   setChooseMovie,
 }: MovieItemProps) => {
+  const [isRate, setIsRate] = useState<boolean>(false);
+  const ratedMovies = useSelector(
+    (state: RootState) => state.rateMoviesReducer.ratedMovies
+  );
+  const ratedMovie = ratedMovies.find((movie) => movie.id === item.id);
+
+  const checkIsRate = useCallback(() => {
+    if (ratedMovie !== undefined) {
+      setIsRate(true);
+    }
+  }, [ratedMovie]);
+
+  useEffect(() => {
+    checkIsRate();
+  }, [checkIsRate]);
+
   const dispatch = useDispatch();
   const favMovies = useSelector(
     (state: RootState) => state.favouriteMoviesReducer.favouriteMovies
   );
-
   return (
     <div className="movie-item">
       <img src={item.src} alt="movie" className="movie-item__img" />
@@ -35,10 +57,10 @@ export const MovieItem = ({
             className="movie-item__btn"
             onClick={() => {
               setChooseMovie(item);
-              setModal(true);
+              setModalOpen(true);
             }}
           >
-            Изменить оценку
+            {!isRate ? "Поставить оценку" : "Изменить оценку"}
           </button>
         )}
         {!favMovies.some((movies) => movies.id === item.id) ? (
@@ -63,19 +85,16 @@ export const MovieItem = ({
 
 interface IMoviesCards {
   cards: IMovie[];
-  setModal?: any;
-  setChooseMovie?: any;
-  setRates?: any;
-  chooseMovie?: IMovie;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
+  setChooseMovie: Dispatch<SetStateAction<IMovie>>;
   withoutRating?: boolean;
 }
+
 const MoviesCards = ({
   withoutRating,
   cards,
-  setModal,
+  setModalOpen,
   setChooseMovie,
-  setRates,
-  chooseMovie,
 }: IMoviesCards) => {
   return (
     <div className="movies-cards">
@@ -84,10 +103,8 @@ const MoviesCards = ({
           <MovieItem
             item={item}
             key={item.id}
-            setModal={setModal}
+            setModalOpen={setModalOpen}
             setChooseMovie={setChooseMovie}
-            setRates={setRates}
-            chooseMovie={chooseMovie}
             withoutRating={withoutRating}
           />
         ))}

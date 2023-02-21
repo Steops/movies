@@ -10,7 +10,7 @@ const ADD_MOVIES_FROM_LOCALSTORAGE = "ADD_MOVIES_FROM_LOCALSTORAGE";
 
 export const localstorageReducer = (
   state = defaultState,
-  action: PayloadAction<IMovie[]>
+  action: PayloadAction<any>
 ) => {
   switch (action.type) {
     case ADD_MOVIES_FROM_LOCALSTORAGE:

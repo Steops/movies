@@ -1,14 +1,17 @@
-import { Link } from "react-router-dom";
+interface IHeader {
+  setMenuActive: any;
+  menuActive: boolean;
+}
 
-const Header = () => {
+const Header = ({ setMenuActive, menuActive }: IHeader) => {
   return (
     <div className="header">
-      <span className="header__button">
-        <Link to="/">Главная</Link>
-      </span>
-      <span className="header__button">
-        <Link to="/favorites">Избранное</Link>
-      </span>
+      <div
+        className="header__burger-btn"
+        onClick={() => setMenuActive(!menuActive)}
+      >
+        <span />
+      </div>
     </div>
   );
 };
