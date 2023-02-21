@@ -1,35 +1,20 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-const RATE_MOVIES_REDUCER = "RATE_MOVIES_REDUCER";
-const ADD_RATED_MOVIES_FROM_LOCALSTORAGE = "ADD_RATED_MOVIES_FROM_LOCALSTORAGE";
+import {
+  IRatedMovie,
+  IStateRatedMovies,
+  RatedMoviesAction,
+  RatedMoviesTypes,
+} from "../types/rateMovies";
 
-export interface IRate {
-  scenario?: number;
-  artist?: number;
-  operator?: number;
-}
-
-export interface IRatedMovie {
-  id: number;
-  name: string;
-  description: string;
-  src: string;
-  rate: IRate;
-}
-
-export interface IRatedMovies {
-  ratedMovies: IRatedMovie[];
-}
-
-const defaultState: IRatedMovies = {
+const defaultState: IStateRatedMovies = {
   ratedMovies: [],
 };
 
 export const rateMoviesReducer = (
   state = defaultState,
-  action: PayloadAction<any>
+  action: RatedMoviesAction
 ) => {
   switch (action.type) {
-    case RATE_MOVIES_REDUCER:
+    case RatedMoviesTypes.RATE_MOVIES_REDUCER:
       const movieIndex = state.ratedMovies.findIndex(
         (item) => action.payload.id === item.id
       );
@@ -43,7 +28,7 @@ export const rateMoviesReducer = (
       return {
         ratedMovies: [...state.ratedMovies, action.payload],
       };
-    case ADD_RATED_MOVIES_FROM_LOCALSTORAGE:
+    case RatedMoviesTypes.ADD_RATED_MOVIES_FROM_LOCALSTORAGE:
       return {
         ratedMovies: [...action.payload],
       };
@@ -54,9 +39,12 @@ export const rateMoviesReducer = (
 };
 
 export const setRateMovies = (ratedMovie: IRatedMovie) => {
-  return { type: RATE_MOVIES_REDUCER, payload: ratedMovie };
+  return { type: RatedMoviesTypes.RATE_MOVIES_REDUCER, payload: ratedMovie };
 };
 
 export const getRatedMoviesFromLocalstorage = (movies: IRatedMovie[]) => {
-  return { type: ADD_RATED_MOVIES_FROM_LOCALSTORAGE, payload: movies };
+  return {
+    type: RatedMoviesTypes.ADD_RATED_MOVIES_FROM_LOCALSTORAGE,
+    payload: movies,
+  };
 };

@@ -1,14 +1,9 @@
+import {
+  FavouriteActionTypes,
+  FavouriteMoviesAction,
+  IStateFavouriteMovie,
+} from "../types/favouriteMovies";
 import { IMovie } from "./../types/types";
-import { PayloadAction } from "@reduxjs/toolkit";
-
-const ADD_FAVOURITE_MOVIES = "ADD_FAVOURITE_MOVIES";
-const DELETE_FAVOURITE_MOVIES = "DELETE_FAVOURITE_MOVIES";
-const ADD_FAVOURITE_MOVIES_FROM_LOCALSTORAGE =
-  "ADD_FAVOURITE_MOVIES_FROM_LOCALSTORAGE";
-
-export interface IStateFavouriteMovie {
-  favouriteMovies: IMovie[];
-}
 
 const defaultStates: IStateFavouriteMovie = {
   favouriteMovies: [],
@@ -16,21 +11,21 @@ const defaultStates: IStateFavouriteMovie = {
 
 export const favouriteMoviesReducer = (
   state = defaultStates,
-  action: PayloadAction<any>
+  action: FavouriteMoviesAction
 ) => {
   switch (action.type) {
-    case ADD_FAVOURITE_MOVIES:
+    case FavouriteActionTypes.ADD_FAVOURITE_MOVIES:
       return {
         favouriteMovies: [...state.favouriteMovies, action.payload],
       };
-    case DELETE_FAVOURITE_MOVIES:
+    case FavouriteActionTypes.DELETE_FAVOURITE_MOVIES:
       const deleteState = state.favouriteMovies.filter(
         (item: IMovie) => item.id !== action.payload.id
       );
       return {
         favouriteMovies: [...deleteState],
       };
-    case ADD_FAVOURITE_MOVIES_FROM_LOCALSTORAGE:
+    case FavouriteActionTypes.ADD_FAVOURITE_MOVIES_FROM_LOCALSTORAGE:
       return {
         favouriteMovies: [...action.payload],
       };
@@ -41,13 +36,16 @@ export const favouriteMoviesReducer = (
 };
 
 export const setFavouriteMovies = (movie: IMovie) => {
-  return { type: ADD_FAVOURITE_MOVIES, payload: movie };
+  return { type: FavouriteActionTypes.ADD_FAVOURITE_MOVIES, payload: movie };
 };
 
 export const setDeleteFavouriteMovies = (movie: IMovie) => {
-  return { type: DELETE_FAVOURITE_MOVIES, payload: movie };
+  return { type: FavouriteActionTypes.DELETE_FAVOURITE_MOVIES, payload: movie };
 };
 
 export const getFavouriteMoviesFromLocalstorage = (movies: IMovie[]) => {
-  return { type: ADD_FAVOURITE_MOVIES_FROM_LOCALSTORAGE, payload: movies };
+  return {
+    type: FavouriteActionTypes.ADD_FAVOURITE_MOVIES_FROM_LOCALSTORAGE,
+    payload: movies,
+  };
 };

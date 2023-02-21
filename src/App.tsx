@@ -10,11 +10,9 @@ import { Header } from "./components/Header/Header";
 import { getFavouriteMoviesFromLocalstorage } from "./store/favouriteMoviesReducer";
 import { IMovie } from "./types/types";
 import { RatedPage } from "./pages/RatedPages";
-import {
-  getRatedMoviesFromLocalstorage,
-  IRatedMovie,
-} from "./store/rateMoviesReducer";
+import { getRatedMoviesFromLocalstorage } from "./store/rateMoviesReducer";
 import { Menu } from "./components/Menu/Menu";
+import { IRatedMovie } from "./types/rateMovies";
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();

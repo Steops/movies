@@ -176,9 +176,10 @@ ul {
     animation: BgBrightness 0.5s ease-in-out forwards;
   }
   &__content {
+    top: 25%;
+    position: fixed;
     align-self: center;
     z-index: 3;
-    position: fixed;
     padding: 20px;
     border: 1px solid black;
     background-color: $back-color;

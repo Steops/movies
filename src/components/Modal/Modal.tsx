@@ -1,7 +1,8 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { IRatedMovie, setRateMovies } from "../../store/rateMoviesReducer";
+import { setRateMovies } from "../../store/rateMoviesReducer";
 import { RootState } from "../../store/store";
+import { IRatedMovie } from "../../types/rateMovies";
 import { IMovie } from "../../types/types";
 
 interface IStarRating {
