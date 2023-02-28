@@ -29,6 +29,7 @@ const App = () => {
   const ratedRef = useRef<boolean>(true);
 
   const [menuActive, setMenuActive] = useState<boolean>(false);
+  const [shouldRender, setRender] = useState<boolean>(menuActive);
 
   useEffect(() => {
     dispatch(fetchMovies());
@@ -61,7 +62,13 @@ const App = () => {
     }
   }, [ratedMovies]);
 
-  const [shouldRender, setRender] = useState<boolean>(menuActive);
+  useEffect(() => {
+    if (menuActive) setRender(true);
+  }, [menuActive]);
+
+  const onAnimationEnd = () => {
+    if (!menuActive) setRender(false);
+  };
 
   return (
     <div className="layout">
@@ -75,7 +82,7 @@ const App = () => {
         <Menu
           setMenuActive={setMenuActive}
           menuActive={menuActive}
-          setRender={setRender}
+          onAnimationEnd={onAnimationEnd}
         />
       )}
     </div>
