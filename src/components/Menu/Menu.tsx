@@ -1,13 +1,27 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 interface IMenu {
   setMenuActive: Dispatch<SetStateAction<boolean>>;
+  menuActive: boolean;
+  setRender: Dispatch<SetStateAction<boolean>>;
 }
 
-const Menu = ({ setMenuActive }: IMenu) => {
+const Menu = ({ setMenuActive, menuActive, setRender }: IMenu) => {
+  useEffect(() => {
+    if (menuActive) setRender(true);
+  }, [menuActive, setRender]);
+
+  const onAnimationEnd = () => {
+    if (!menuActive) setRender(false);
+  };
+
   return (
-    <div className="menu">
+    <div
+      className="menu"
+      onAnimationEnd={onAnimationEnd}
+      style={{ animation: `${menuActive ? "MenuIn" : "MenuOut"} 0.5s` }}
+    >
       <div className="blur" onClick={() => setMenuActive(false)} />
       <div className="menu__content">
         <div className="menu__header">Меню</div>

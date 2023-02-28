@@ -16,7 +16,7 @@ const StarRating = ({ rating, setRating, title, ratingType }: IStarRating) => {
   const rateData = [5, 4, 3, 2, 1];
   return (
     <div className="stars">
-      <span>{title}</span>
+      <span className="stars__title">{title}</span>
       {rateData.map((rate, index) => (
         <div
           className={`star ${rating >= rate ? "--fill" : ""}`}

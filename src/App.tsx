@@ -61,6 +61,8 @@ const App = () => {
     }
   }, [ratedMovies]);
 
+  const [shouldRender, setRender] = useState<boolean>(menuActive);
+
   return (
     <div className="layout">
       <Header setMenuActive={setMenuActive} menuActive={menuActive} />
@@ -69,7 +71,13 @@ const App = () => {
         <Route path="/favorites" element={<FavouritePage />} />
         <Route path="/rated" element={<RatedPage />} />
       </Routes>
-      {menuActive && <Menu setMenuActive={setMenuActive} />}
+      {shouldRender && (
+        <Menu
+          setMenuActive={setMenuActive}
+          menuActive={menuActive}
+          setRender={setRender}
+        />
+      )}
     </div>
   );
 };
