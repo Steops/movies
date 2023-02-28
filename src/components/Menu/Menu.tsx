@@ -2,14 +2,13 @@ import { Dispatch, SetStateAction } from "react";
 import { Link } from "react-router-dom";
 
 interface IMenu {
-  menuActive: boolean;
   setMenuActive: Dispatch<SetStateAction<boolean>>;
 }
 
-const Menu = ({ menuActive, setMenuActive }: IMenu) => {
+const Menu = ({ setMenuActive }: IMenu) => {
   return (
-    <div className={menuActive ? "menu active" : "menu"}>
-      <div className="blur" />
+    <div className="menu">
+      <div className="blur" onClick={() => setMenuActive(false)} />
       <div className="menu__content">
         <div className="menu__header">Меню</div>
         <ul>

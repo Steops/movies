@@ -19,21 +19,18 @@ const RatedPage = () => {
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   return (
     <div className="page">
-      <Modal
-        isModalOpen={isModalOpen}
-        chooseMovie={chooseMovie}
-        setModalOpen={setModalOpen}
-      />
+      {isModalOpen && (
+        <Modal setModalOpen={setModalOpen} chooseMovie={chooseMovie} />
+      )}
+
       <MoviesCards
         cards={movies}
         setModalOpen={setModalOpen}
         setChooseMovie={setChooseMovie}
       />
-      <span
-        className={movies.length === 0 ? "page__alert-on" : "page__alert-off"}
-      >
-        Оценённых фильмов пока нет!
-      </span>
+      {movies.length === 0 && (
+        <span className="page__alert">Фильмов в избранном пока нет!</span>
+      )}
     </div>
   );
 };

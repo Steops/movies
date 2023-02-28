@@ -5,14 +5,14 @@ interface IHeader {
 
 const Header = ({ setMenuActive, menuActive }: IHeader) => {
   return (
-    <div className="header">
+    <header className="header">
       <div
         className="header__burger-btn"
         onClick={() => setMenuActive(!menuActive)}
       >
         <span />
       </div>
-    </div>
+    </header>
   );
 };
 

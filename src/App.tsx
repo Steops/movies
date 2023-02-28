@@ -62,14 +62,14 @@ const App = () => {
   }, [ratedMovies]);
 
   return (
-    <div className="app">
+    <div className="layout">
       <Header setMenuActive={setMenuActive} menuActive={menuActive} />
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="/favorites" element={<FavouritePage />} />
         <Route path="/rated" element={<RatedPage />} />
       </Routes>
-      <Menu menuActive={menuActive} setMenuActive={setMenuActive} />
+      {menuActive && <Menu setMenuActive={setMenuActive} />}
     </div>
   );
 };

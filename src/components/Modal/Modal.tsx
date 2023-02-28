@@ -2,22 +2,25 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setRateMovies } from "../../store/rateMoviesReducer";
 import { RootState } from "../../store/store";
-import { IRatedMovie } from "../../types/rateMovies";
+import { IRate, IRatedMovie } from "../../types/rateMovies";
 import { IMovie } from "../../types/types";
 
 interface IStarRating {
   rating: number;
-  setRating: (value: number) => void;
+  setRating: any;
+  title: string;
+  ratingType: string;
 }
 
-const StarRating = ({ rating, setRating }: IStarRating) => {
+const StarRating = ({ rating, setRating, title, ratingType }: IStarRating) => {
   const rateData = [5, 4, 3, 2, 1];
   return (
     <div className="stars">
+      <span>{title}</span>
       {rateData.map((rate, index) => (
         <div
           className={`star ${rating >= rate ? "--fill" : ""}`}
-          onClick={() => setRating(rate)}
+          onClick={() => setRating(rate, ratingType)}
           key={index}
         >
           ★
@@ -27,87 +30,99 @@ const StarRating = ({ rating, setRating }: IStarRating) => {
   );
 };
 
+interface IStars {
+  setRating: any;
+  rating: any;
+}
+const Stars = ({ setRating, rating }: IStars) => {
+  const setRatingPart = (rate: number, ratingType: string) => {
+    setRating({ ...rating, [ratingType]: rate });
+  };
+  const starRatingData = [
+    {
+      title: "Сценарий",
+      ratingType: "scenario",
+      rating: rating.scenario,
+    },
+    {
+      title: "Актерское мастерство",
+      ratingType: "artist",
+      rating: rating.artist,
+    },
+    {
+      title: "Операторская работа",
+      ratingType: "operator",
+      rating: rating.operator,
+    },
+  ];
+
+  return (
+    <div>
+      {starRatingData.map((item, index) => (
+        <StarRating
+          title={item.title}
+          setRating={setRatingPart}
+          key={index}
+          ratingType={item.ratingType}
+          rating={item.rating}
+        />
+      ))}
+    </div>
+  );
+};
+
 interface IModal {
-  isModalOpen: boolean;
   chooseMovie: IMovie;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const Modal = ({ chooseMovie, isModalOpen, setModalOpen }: IModal) => {
+const Modal = ({ chooseMovie, setModalOpen }: IModal) => {
   const ratedMovies: IRatedMovie[] = useSelector(
     (state: RootState) => state.rateMoviesReducer.ratedMovies
   );
-
   const [currentRate, setCurrentRate] = useState<number>(0);
 
-  interface IRating {
-    scenario: number;
-    operator: number;
-    artist: number;
-  }
-  const [rating, setRating] = useState<IRating>({
+  const [rating, setRating] = useState<IRate>({
     scenario: 0,
     operator: 0,
     artist: 0,
   });
 
-  const setRatingScenario = (rate: number) => {
-    setRating({ ...rating, scenario: rate });
-  };
-
-  const setRatingOperator = (rate: number) => {
-    setRating({ ...rating, operator: rate });
-  };
-
-  const setRatingArtist = (rate: number) => {
-    setRating({ ...rating, artist: rate });
-  };
-
   const dispatch = useDispatch();
+
+  const ratedMovie = ratedMovies.find((movie) => movie.id === chooseMovie?.id);
+
+  const onSendRatingHandler = () => {
+    dispatch(
+      setRateMovies({
+        ...chooseMovie,
+        rate: rating,
+      })
+    );
+    setModalOpen(false);
+  };
+
   useEffect(() => {
     setCurrentRate(0);
   }, [chooseMovie]);
 
-  const ratedMovie = ratedMovies.find((movie) => movie.id === chooseMovie?.id);
-
   useEffect(() => {
     if (ratedMovie) {
       setRating({
-        scenario: ratedMovie.rate.scenario || 0,
-        artist: ratedMovie.rate.artist || 0,
-        operator: ratedMovie.rate.operator || 0,
-      });
-    } else {
-      setRating({
-        scenario: 0,
-        artist: 0,
-        operator: 0,
+        scenario: ratedMovie.rate.scenario,
+        artist: ratedMovie.rate.artist,
+        operator: ratedMovie.rate.operator,
       });
     }
   }, [ratedMovie]);
 
   useEffect(() => {
-    let rateScenario = rating.scenario;
-    let rateArtist = rating.artist;
-    let rateOperator = rating.operator;
-
-    const sumRate = rateScenario + rateArtist + rateOperator;
-    const averageRate = Math.round((sumRate / 3) * 1e2) / 1e2;
+    const sumRate = rating.scenario + rating.artist + rating.operator;
+    const averageRate = Math.round((sumRate / 3) * 100) / 100;
     setCurrentRate(averageRate);
   }, [rating]);
 
-  let isRating = false;
-
-  const setIsRating = () => {
-    if (rating.artist !== 0 && rating.operator !== 0 && rating.scenario !== 0) {
-      isRating = true;
-    }
-    return isRating;
-  };
-
-  setIsRating();
-
-  return !isModalOpen ? null : (
+  return (
     <div className="modal">
       <div className="modal__overlay" onClick={() => setModalOpen(false)}></div>
       <div className="modal__content">
@@ -115,26 +130,12 @@ const Modal = ({ chooseMovie, isModalOpen, setModalOpen }: IModal) => {
           х
         </div>
         <span className="modal__title">Оцените фильм "{chooseMovie.name}"</span>
-        <span>Сценарий</span>
-        <StarRating rating={rating.scenario} setRating={setRatingScenario} />
+        <Stars setRating={setRating} rating={rating} />
 
-        <span>Актерское мастерство</span>
-        <StarRating rating={rating.artist} setRating={setRatingArtist} />
-
-        <span>Операторская работа</span>
-        <StarRating rating={rating.operator} setRating={setRatingOperator} />
         <button
           className="modal__btn"
-          disabled={isRating ? false : true}
-          onClick={() => {
-            dispatch(
-              setRateMovies({
-                ...chooseMovie,
-                rate: rating,
-              })
-            );
-            setModalOpen(false);
-          }}
+          disabled={!rating.artist || !rating.operator || !rating.scenario}
+          onClick={onSendRatingHandler}
         >
           {ratedMovie ? "Изменить оценку" : "Оценить фильм"}
         </button>

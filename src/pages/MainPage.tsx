@@ -19,11 +19,9 @@ const MainPage = () => {
 
   return (
     <div className="page">
-      <Modal
-        isModalOpen={isModalOpen}
-        chooseMovie={chooseMovie}
-        setModalOpen={setModalOpen}
-      />
+      {isModalOpen && (
+        <Modal setModalOpen={setModalOpen} chooseMovie={chooseMovie} />
+      )}
       <MoviesCards
         cards={movies}
         setModalOpen={setModalOpen}

@@ -19,9 +19,9 @@ export type RatedMoviesAction =
   | AddRatedMoviesFromLocalstorageAction;
 
 export interface IRate {
-  scenario?: number;
-  artist?: number;
-  operator?: number;
+  scenario: number;
+  artist: number;
+  operator: number;
 }
 
 export interface IRatedMovie {

@@ -1,10 +1,4 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "../../App.scss";
 import {
@@ -20,59 +14,49 @@ interface MovieItemProps {
   withoutRating?: boolean;
   setChooseMovie: Dispatch<SetStateAction<IMovie>>;
 }
-export const MovieItem = ({
+const MovieItem = ({
   item,
   setModalOpen,
   withoutRating,
   setChooseMovie,
 }: MovieItemProps) => {
-  const [isRate, setIsRate] = useState<boolean>(false);
   const ratedMovies = useSelector(
     (state: RootState) => state.rateMoviesReducer.ratedMovies
   );
-  const ratedMovie = ratedMovies.find((movie) => movie.id === item.id);
-
-  const checkIsRate = useCallback(() => {
-    if (ratedMovie !== undefined) {
-      setIsRate(true);
-    }
-  }, [ratedMovie]);
-
-  useEffect(() => {
-    checkIsRate();
-  }, [checkIsRate]);
-
-  const dispatch = useDispatch();
   const favMovies = useSelector(
     (state: RootState) => state.favouriteMoviesReducer.favouriteMovies
   );
+
+  const ratedMovie = ratedMovies.find((movie) => movie.id === item.id);
+  const dispatch = useDispatch();
+
   return (
-    <div className="movie-item">
-      <img src={item.src} alt="movie" className="movie-item__img" />
-      <h1 className="movie-item__name">{item.name}</h1>
-      <span className="movie-item__description">{item.description}</span>
-      <div className="movie-item__buttons">
+    <div className="movie-cards__item">
+      <img src={item.src} alt="movie" className="movie-cards__item-img" />
+      <h1 className="movie-cards__item-name">{item.name}</h1>
+      <span className="movie-cards__item-description">{item.description}</span>
+      <div className="movie-cards__item-buttons">
         {!withoutRating && (
           <button
-            className="movie-item__btn"
+            className="movie-cards__item-btn"
             onClick={() => {
               setChooseMovie(item);
               setModalOpen(true);
             }}
           >
-            {!isRate ? "Поставить оценку" : "Изменить оценку"}
+            {!ratedMovie ? "Поставить оценку" : "Изменить оценку"}
           </button>
         )}
         {!favMovies.some((movies) => movies.id === item.id) ? (
           <button
-            className="movie-item__btn"
+            className="movie-cards__item-btn"
             onClick={() => dispatch(setFavouriteMovies(item))}
           >
             Добавить в избранное
           </button>
         ) : (
           <button
-            className="movie-item__btn"
+            className="movie-cards__item-btn"
             onClick={() => dispatch(setDeleteFavouriteMovies(item))}
           >
             Удалить из избранного
@@ -98,8 +82,8 @@ const MoviesCards = ({
 }: IMoviesCards) => {
   return (
     <div className="movies-cards">
-      {cards &&
-        cards.map((item) => (
+      <div className="movies-cards__wrapper">
+        {cards.map((item) => (
           <MovieItem
             item={item}
             key={item.id}
@@ -108,6 +92,7 @@ const MoviesCards = ({
             withoutRating={withoutRating}
           />
         ))}
+      </div>
     </div>
   );
 };
